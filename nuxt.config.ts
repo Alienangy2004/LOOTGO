@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     head: {
       title: 'LootGo - ITGAM 2026',
       script: [
-        { src: 'https://cdn.tailwindcss.com' } // Doble seguridad para estilos
+        { src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBv_-ruq8hJ85rQ0AgA52n5j6XClmJiL4I' } // Doble seguridad para estilos
       ]
     }
   },
