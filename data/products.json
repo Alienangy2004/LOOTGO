@@ -1,0 +1,4 @@
+[
+  { "id": 1, "name": "Pan Campesino", "price": 23.00, "category": "Panaderías" },
+  { "id": 2, "name": "Pizza Pepperoni", "price": 150.00, "category": "Pizzerías" }
+]
