@@ -1,24 +1,65 @@
+import { defineNuxtConfig } from 'nuxt/config'
+
 export default defineNuxtConfig({
-  // Actualiza esto a la fecha de hoy para quitar el Warning
-  compatibilityDate: '2026-04-13', 
-  
+  // 1. Configuración de compatibilidad (Evita el warning de 2024)
+  compatibilityDate: '2024-04-03',
+
+  // 2. Renderizado del lado del cliente (Crítico para evitar errores de hidratación)
   ssr: false,
 
-  // Asegúrate de que los módulos estén así para que Tailwind no falle
+  // 3. Módulos: Sin esto, Tailwind NO funciona
   modules: [
     '@nuxtjs/tailwindcss'
   ],
 
+  // 4. CSS Global: Importa tus directivas de Tailwind
+  css: [
+    '~/assets/css/main.css'
+  ],
+
+  // 5. Configuración de la App (Para los iconos y Google Maps)
+  app: {
+    head: {
+      title: 'LootGo - ITGAM 2026',
+      script: [
+        { src: 'https://cdn.tailwindcss.com' } // Doble seguridad para estilos
+      ]
+    }
+  },
+
+  // 6. Servidor: Tu configuración de puerto fuera de OneDrive
   devServer: {
     host: '127.0.0.1',
     port: 3001
   },
 
-  // Mantenemos esto por el tema del Firewall en Windows
+  // 7. Solución definitiva al error de esbuild/tsconfig en Windows
+  typescript: {
+    typeCheck: false,
+    strict: false,
+    includeWorkspace: false
+  },
+
+  // 8. Vite: Desactivamos HMR para que el Firewall de Windows no bloquee el IPC
   vite: {
     server: {
       hmr: false,
-      watch: { usePolling: true }
+      watch: {
+        usePolling: true
+      }
+    },
+    esbuild: {
+      tsconfigRaw: `{
+        "compilerOptions": {
+          "target": "esnext",
+          "module": "esnext",
+          "lib": ["esnext", "dom"],
+          "moduleResolution": "node",
+          "isolatedModules": true,
+          "useDefineForClassFields": true,
+          "jsx": "preserve"
+        }
+      }`
     }
   }
 })
