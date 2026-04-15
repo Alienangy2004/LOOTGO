@@ -1,40 +1,39 @@
 <template>
-  <div class="h-screen w-full flex flex-col">
-    <div id="map" class="flex-grow w-full bg-gray-200"></div>
-    <div class="p-4 bg-white border-t text-center">
-      <button @click="geolocalizar" class="bg-pink-600 text-white px-6 py-2 rounded-full font-bold">
-        📍 MI UBICACIÓN ACTUAL
-      </button>
+  <div class="h-screen w-full relative">
+    <div id="map" class="h-full w-full"></div>
+    
+    <div class="absolute bottom-28 left-6 right-6 z-10">
+      <div class="rendered-card p-6">
+        <h3 class="text-sm font-black mb-4 flex items-center gap-2" :style="{ color: 'var(--text-main)' }">
+          <span class="animate-ping w-2 h-2 bg-pink-500 rounded-full"></span>
+          Ubicación GPS en vivo
+        </h3>
+        <button @click="centrarMapa" class="btn-neon-anim w-full">
+          <span></span><span></span><span></span><span></span>
+          Recalibrar Posición
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-let map;
-let marker;
-
-const geolocalizar = () => {
+let map; let marker;
+const centrarMapa = () => {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      map.setCenter(pos);
-      marker.setPosition(pos);
-      marker.setAnimation(google.maps.Animation.BOUNCE);
+    navigator.geolocation.getCurrentPosition((p) => {
+      const pos = { lat: p.coords.latitude, lng: p.coords.longitude };
+      map.setCenter(pos); marker.setPosition(pos);
     });
   }
-};
-
+}
 onMounted(() => {
-  // Coordenadas iniciales (CDMX)
-  const initialPos = { lat: 19.4326, lng: -99.1332 };
   map = new google.maps.Map(document.getElementById("map"), {
-    center: initialPos,
-    zoom: 15,
-    styles: [ { featureType: "all", elementType: "all", stylers: [{ saturation: -100 }] } ] // Mapa limpio
+    center: { lat: 19.4851, lng: -99.1102 },
+    zoom: 16,
+    disableDefaultUI: true
   });
-  marker = new google.maps.Marker({ position: initialPos, map: map, title: "Estás aquí" });
-});
+  marker = new google.maps.Marker({ position: { lat: 19.4851, lng: -99.1102 }, map });
+  centrarMapa();
+})
 </script>

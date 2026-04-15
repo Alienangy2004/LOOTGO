@@ -1,46 +1,49 @@
 <template>
-  <div class="p-4">
-    <div class="bg-pink-600 rounded-3xl p-6 mb-6 text-white shadow-lg">
-      <h2 class="text-2xl font-bold mb-1">Hola Vecino! 👋</h2>
-      <p class="text-sm opacity-90">¿Qué necesitas hoy para el ITGAM?</p>
+  <div class="p-6 pb-32 relative z-10">
+    <div class="flex justify-between items-center mb-10 px-2">
+      <h1 class="text-5xl font-black italic tracking-tighter text-pink-600 drop-shadow-2xl">LOOTGO</h1>
     </div>
 
-    <div class="flex gap-2 overflow-x-auto pb-4 mb-6 no-scrollbar">
-      <button v-for="cat in categories" :key="cat" 
-        class="px-5 py-2 rounded-full text-xs whitespace-nowrap border"
-        :class="activeFilter === cat ? 'bg-pink-600 text-white border-pink-600' : 'bg-white text-gray-700 border-gray-200'"
-        @click="activeFilter = cat">
-        {{ cat }}
-      </button>
-    </div>
+    <h2 class="text-[10px] font-black uppercase tracking-[0.4em] mb-8 opacity-60 pl-2">
+      Locales Disponibles (ITGAM)
+    </h2>
 
-    <div class="flex justify-between items-center mb-4">
-      <h3 class="text-xl font-bold text-gray-900">Explora todos los negocios</h3>
-      <span class="text-xs text-pink-600 underline">Ver más</span>
-    </div>
+    <div v-if="stores && stores.length > 0" class="space-y-6">
+      <NuxtLink v-for="store in stores" :key="store.id" :to="`/store/${store.id}`"
+        class="rendered-card group relative h-44 flex items-center p-8 overflow-hidden border border-white/10 hover:scale-[1.02] transition-transform duration-300">
+        
+        <div class="w-24 h-24 bg-white rounded-[2rem] shadow-2xl flex items-center justify-center text-5xl z-10 group-hover:rotate-6 transition-transform">
+          {{ store.icon }}
+        </div>
 
-    <div class="grid grid-cols-2 gap-4">
-      <NuxtLink v-for="store in filteredStores" :key="store.id" :to="`/store/${store.id}`"
-        class="rounded-3xl p-5 flex flex-col items-center justify-center text-white shadow-xl transition-all hover:scale-105 active:scale-95"
-        :class="store.color">
-        <span class="text-6xl mb-3">{{ store.icon }}</span>
-        <h4 class="font-bold text-base leading-tight">{{ store.name }}</h4>
-        <div class="flex items-center text-[10px] mt-2 opacity-90">
-          ⭐ {{ store.rating }} | 💬 {{ store.reviews }}
+        <div class="ml-8 z-10">
+          <h4 class="text-2xl font-black leading-none mb-2 drop-shadow-md">
+            {{ store.name }}
+          </h4>
+          <p class="text-[10px] font-bold uppercase tracking-widest text-pink-500">{{ store.category }}</p>
+          
+          <div class="flex items-center gap-3 mt-4">
+            <span class="bg-pink-600 text-white text-[9px] px-3 py-1 rounded-full font-black shadow-lg">
+              ⭐ {{ store.rating }}
+            </span>
+            <span class="text-[10px] font-bold opacity-50">{{ store.reviews }} reseñas</span>
+          </div>
         </div>
       </NuxtLink>
+    </div>
+
+    <div v-else class="text-center py-20">
+      <div class="animate-spin text-4xl mb-4">🌀</div>
+      <p class="text-xs font-bold uppercase tracking-widest opacity-50">Sincronizando comercios...</p>
     </div>
   </div>
 </template>
 
 <script setup>
-const activeFilter = ref('Todos')
-const categories = ['Todos', 'Pizzerías', 'Panaderías', 'Farmacias']
+// Forzamos el refresh para que no use caché vieja
+const { data: stores, refresh } = await useFetch('/api/stores')
 
-const { data: stores } = await useFetch('/api/stores')
-
-const filteredStores = computed(() => {
-  if (activeFilter.value === 'Todos') return stores.value
-  return stores.value?.filter(s => s.category.toLowerCase() === activeFilter.value.toLowerCase().replace('í','i'))
+onMounted(() => {
+  refresh() // Recarga los datos al entrar
 })
 </script>

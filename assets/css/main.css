@@ -1,21 +1,43 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,600&display=swap');
 
-/* Estilos base para coincidir con las imágenes */
+:root {
+    /* MODO DÍA: Colores claros/pastel */
+    --bg-gradient: linear-gradient(-45deg, #fff0c9, #ffc9f3, #c9e4ff, #fff0c9);
+    --text-main: #1e293b;
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --accent-neon: #289bb8;
+}
+
+[data-theme="dark"] {
+    /* MODO NOCHE: Colores profundos/cyber */
+    --bg-gradient: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #020617);
+    --text-main: #f8fafc;
+    --bg-card: rgba(15, 23, 42, 0.85);
+    --accent-neon: #38bdf8;
+}
+
 body {
-  @apply bg-gray-50 text-gray-900 font-sans;
+    /* IMPORTANTE: El fondo debe ser la variable */
+    background: var(--bg-gradient) !important;
+    background-size: 400% 400%;
+    animation: flow 15s ease infinite;
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-main);
+    transition: all 0.8s ease;
+    margin: 0;
+    @apply min-h-screen;
 }
 
-/* Scrollbar oculto pero funcional para las categorías */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+@keyframes flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
-input:focus {
-  @apply outline-none ring-1 ring-pink-500;
+.rendered-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    border-radius: 2rem;
 }

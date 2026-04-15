@@ -1,37 +1,37 @@
 <template>
-  <div class="p-6 bg-white min-h-screen pb-24 text-black">
-    <h2 class="text-2xl font-bold mb-6 text-pink-600 italic">Mi Perfil</h2>
-    
-    <div class="space-y-4">
-      <div v-for="(val, key) in user" :key="key" class="border-b py-2">
-        <label class="text-[10px] uppercase text-gray-400">{{ key }}</label>
-        <input v-if="editMode" v-model="user[key]" class="w-full text-sm border-pink-200 border p-1 rounded">
-        <p v-else class="text-sm font-semibold">{{ val || 'No definido' }}</p>
+  <div class="min-h-screen p-6 pb-32">
+    <div class="rendered-card p-8 mb-8 text-center">
+      <div class="w-24 h-24 bg-gradient-to-tr from-pink-500 to-indigo-600 rounded-3xl mx-auto mb-4 flex items-center justify-center text-4xl text-white font-black shadow-xl">
+        {{ user.Nombre[0] }}
       </div>
+      <h2 class="text-2xl font-black">{{ user.Nombre }}</h2>
+      <p class="text-[10px] font-black uppercase tracking-[0.3em] text-pink-500">{{ user.Bio }}</p>
     </div>
 
-    <button @click="toggleEdit" class="w-full mt-6 py-3 rounded-xl font-bold transition"
-      :class="editMode ? 'bg-green-500 text-white' : 'bg-pink-600 text-white'">
-      {{ editMode ? 'Guardar Cambios' : 'Editar Perfil' }}
-    </button>
+    <div class="rendered-card p-6 space-y-4">
+      <div v-for="(val, key) in user" :key="key" class="border-b border-white/10 pb-2">
+        <p class="text-[9px] font-black uppercase opacity-40">{{ key }}</p>
+        <input v-if="editMode" v-model="user[key]" class="w-full bg-transparent border-none outline-none text-sm font-bold" :style="{ color: 'var(--text-main)' }">
+        <p v-else class="font-bold text-sm">{{ val }}</p>
+      </div>
+
+      <button @click="toggleEdit" class="btn-neon-anim w-full mt-6">
+        <span></span><span></span><span></span><span></span>
+        {{ editMode ? 'Guardar Cambios' : 'Editar Información' }}
+      </button>
+
+      <button @click="logout" class="btn-neon-anim w-full mt-4 border-red-500 text-red-500 hover:bg-red-500">
+        <span></span><span></span><span></span><span></span>
+        Cerrar Sesión
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 const editMode = ref(false)
-const user = ref({
-  Nombre: 'Ricardo', Apellido: 'Sanchez', Carrera: 'TICS', Semestre: '9no', 
-  Institucion: 'ITGAM', Correo: 'ricardo@itgam.edu.mx', Telefono: '5512345678', 
-  Dirección: 'Calle Falsa 123', Ciudad: 'CDMX', Bio: 'Mejor promedio'
-})
+const user = ref({ Nombre: 'Angel Armando', Carrera: 'TICS', Semestre: '9no', Institucion: 'ITGAM', Correo: 'angel@itgam.mx', Bio: 'Mejor promedio' })
 
-onMounted(() => {
-  const saved = localStorage.getItem('user_data')
-  if (saved) user.value = JSON.parse(saved)
-})
-
-const toggleEdit = () => {
-  if (editMode.value) localStorage.setItem('user_data', JSON.stringify(user.value))
-  editMode.value = !editMode.value
-}
+const toggleEdit = () => { editMode.value = !editMode.value }
+const logout = () => { navigateTo('/login'); }
 </script>
