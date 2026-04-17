@@ -1,4 +1,10 @@
+/* 1. LOS IMPORTS PRIMERO QUE TODO */
 @import url('https://fonts.googleapis.com/css?family=Poppins:300,400,600&display=swap');
+
+/* 2. DIRECTIVAS DE TAILWIND */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
     /* MODO DÍA: Colores claros/pastel */
@@ -6,6 +12,7 @@
     --text-main: #1e293b;
     --bg-card: rgba(255, 255, 255, 0.7);
     --accent-neon: #289bb8;
+    --shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
 }
 
 [data-theme="dark"] {
@@ -14,18 +21,19 @@
     --text-main: #f8fafc;
     --bg-card: rgba(15, 23, 42, 0.85);
     --accent-neon: #38bdf8;
+    --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 body {
-    /* IMPORTANTE: El fondo debe ser la variable */
+    /* Fondo dinámico con variables */
     background: var(--bg-gradient) !important;
     background-size: 400% 400%;
     animation: flow 15s ease infinite;
     font-family: 'Poppins', sans-serif;
     color: var(--text-main);
-    transition: all 0.8s ease;
+    transition: background 0.8s ease, color 0.5s ease;
     margin: 0;
-    @apply min-h-screen;
+    min-height: 100vh; /* Corrección del error anterior */
 }
 
 @keyframes flow {
@@ -34,10 +42,71 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+/* --- TARJETA RENDERIZADA (GLASSMORPHISM) --- */
 .rendered-card {
     background: var(--bg-card);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--text-main);
+    box-shadow: var(--shadow);
     border-radius: 2rem;
+    color: var(--text-main);
+    transition: transform 0.3s ease;
+}
+
+/* --- BOTÓN NEÓN ANIMADO (RENDERING DINÁMICO) --- */
+.btn-neon-anim {
+    position: relative;
+    padding: 12px 24px;
+    background: transparent;
+    border: 1px solid var(--accent-neon);
+    color: var(--accent-neon);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    overflow: hidden;
+    transition: 0.5s;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.btn-neon-anim:hover {
+    background: var(--accent-neon);
+    color: white;
+    box-shadow: 0 0 30px var(--accent-neon);
+}
+
+/* Spans para el efecto de borde infinito */
+.btn-neon-anim span {
+    position: absolute;
+    display: block;
+    background: var(--accent-neon);
+}
+
+.btn-neon-anim span:nth-child(1) { top: 0; left: -100%; width: 100%; height: 2px; animation: btn-1 2s linear infinite; }
+@keyframes btn-1 { 0% { left: -100%; } 50%,100% { left: 100%; } }
+
+.btn-neon-anim span:nth-child(2) { top: -100%; right: 0; width: 2px; height: 100%; animation: btn-2 2s linear infinite; animation-delay: 0.5s; }
+@keyframes btn-2 { 0% { top: -100%; } 50%,100% { top: 100%; } }
+
+.btn-neon-anim span:nth-child(3) { bottom: 0; right: -100%; width: 100%; height: 2px; animation: btn-3 2s linear infinite; animation-delay: 1s; }
+@keyframes btn-3 { 0% { right: -100%; } 50%,100% { right: 100%; } }
+
+.btn-neon-anim span:nth-child(4) { bottom: -100%; left: 0; width: 2px; height: 100%; animation: btn-4 2s linear infinite; animation-delay: 1.5s; }
+@keyframes btn-4 { 0% { bottom: -100%; } 50%,100% { bottom: 100%; } }
+
+/* --- INPUTS NEÓN RENDERIZADOS --- */
+.neon-input-render {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--accent-neon);
+    padding: 1rem;
+    border-radius: 1rem;
+    color: var(--text-main);
+    outline: none;
+    transition: 0.3s;
+}
+
+.neon-input-render:focus {
+    box-shadow: 0 0 15px var(--accent-neon);
+    background: rgba(255, 255, 255, 0.1);
 }
